@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+	<string name="warning">Press OK to remove the minus \'-\' from all the phone
+		numbers.
+		</string>
+	<string name="app_name">Contact Number Fixer</string>
+	<string name="ok">OK</string>
+	<string name="quit">Quit</string>
+	<string name="finished">All phone numbers have been fixed!</string>
+
+<string name="noContact">Contact Not Found</string>
+
+
+
+<string name="unchanged">No numbers need to be fixed</string>
+</resources>

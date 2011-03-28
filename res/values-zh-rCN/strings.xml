@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="warning">确定移除所有联系人号码中的横线\'-\'吗？</string>
+	<string name="app_name">联系人号码修复工具</string>
+	<string name="ok">确定</string>
+	<string name="quit">退出</string>
+	<string name="finished">所有电话号码已经修复</string>
+
+	<string name="noContact">没找到联系人记录</string>
+
+
+<string name="unchanged">没有需要修复的号码</string>
+</resources>

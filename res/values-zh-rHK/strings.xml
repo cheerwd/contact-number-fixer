@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="warning">同唔同意消除全部電話號碼嘅橫線\'-\'號？</string>
+	<string name="app_name">聯系人號碼修複工具</string>
+	<string name="ok">同意</string>
+	<string name="quit">放棄</string>
+	<string name="finished">電話號碼已經全部修複嗮喇</string>
+
+	<string name="noContact">沒搵到聯系人記錄</string>
+
+
+<string name="unchanged">全部號碼都無需進行修複</string>
+</resources>
