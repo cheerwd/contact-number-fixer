@@ -2,7 +2,6 @@ package jemuillot.ContactNumberFixer;
 
 import jemuillot.pkg.Utilities.AfterTaste;
 import jemuillot.pkg.Utilities.SelfUpdater;
-import net.youmi.android.AdManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -88,12 +87,11 @@ class ContactsPhoneNumberResolver7 implements ContactsPhoneNumberResolver {
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String currentVersionForAd = "1.05";
-
 	private static final String downloadUrl = 
-		"http://cid-b88aa3583ae8dc21.office.live.com/self.aspx/.Public/android/app/ContactNumberFixer/ContactNumberFixer-1.05.apk";
-
-	private static final String updateUrl = "http://jemuillot.wordpress.com/2011/02/07/contactnumberfixer/";
+		"http://contact-number-fixer.googlecode.com/files/ContactNumberFixer-1.06.apk";
+	
+	private static final String updateUrl = "http://contact-number-fixer.googlecode.com/files/updateinfox.sui";
+	private static final String donateUrl = "https://me.alipay.com/jemuillot";
 
 	private Handler mHandler = new Handler();
 
@@ -109,11 +107,6 @@ public class ContactNumberFixer extends Activity {
 
 	private AfterTaste afterTaste;
 
-	static {
-		AdManager.init("79f0afd820ae4839", "a9f22794f6ff522d", 30, false,
-				currentVersionForAd);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -121,6 +114,9 @@ public class ContactNumberFixer extends Activity {
 		return true;
 	}
 
+	private void donate() {
+		afterTaste.donate(donateUrl);
+	}
 	private void feedback() {
 		afterTaste.feedback(null);
 	}
@@ -132,6 +128,9 @@ public class ContactNumberFixer extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.donate:
+			donate();
+			return true;
 		case R.id.feedback:
 			feedback();
 			return true;
@@ -217,7 +216,7 @@ public class ContactNumberFixer extends Activity {
 					android.R.layout.simple_list_item_1);
 
 			logger.setOnItemClickListener(new ListView.OnItemClickListener() {
-
+				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 
@@ -227,7 +226,10 @@ public class ContactNumberFixer extends Activity {
 						share();
 					} else if (position + 2 == total) {
 						feedback();
+					} else if (position + 3 == total) {
+						donate();
 					}
+
 				}
 			});
 
@@ -258,17 +260,18 @@ public class ContactNumberFixer extends Activity {
 								if (finished) {
 									finished_shown = true;
 
-									afterTaste.showADClickHint();
+									afterTaste.showDonateClickHint();
 
 									if (ad.isEmpty())
 										ad.add(getString(R.string.unchanged));
 									else
 										ad.add(getString(R.string.finished));
 
-									ad
-											.add(getString(R.string.afterTasteFeedback));
+									ad.add(getString(R.string.afterTasteDonate));
+									ad.add(getString(R.string.afterTasteFeedback));
 									ad.add(getString(R.string.afterTasteShare));
 								}
+
 								logger.setSelection(ad.getCount() - 1);
 							}
 						});

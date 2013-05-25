@@ -1,41 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="jemuillot.ContactNumberFixer" android:versionName="1.05" android:versionCode="6">
-	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:label="@string/app_name" android:name="ContactNumberFixer">
+	package="jemuillot.ContactNumberFixer" android:versionName="1.06" android:versionCode="7">
+    
+		<application android:icon="@drawable/icon" android:label="@string/app_name">
+		    		<activity android:label="@string/app_name" android:name="ContactNumberFixer">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
+		<activity android:name="jemuillot.pkg.Utilities.AfterSalesFeedbackSelector"/>
 
 </application>
 
-
 	<uses-sdk android:minSdkVersion="3"></uses-sdk>
+		
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 
 	<uses-permission android:name="android.permission.WRITE_CONTACTS"></uses-permission>
-	<!-- 连接网络权限 ，用于请求广告(必须)-->
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
-	<!-- 读取手机基本信息权限，用于精确统计用户的机型等信息(必须) -->
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-	<!--
-		读写sd卡的权限，用于缓存广告所用到的图片，节省流量 ，并可获得更好的用户体验(所有使用有米android
-		2.0版本以上sdk的应用都会共享缓存的图片)
-	-->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-
-
-	<!-- 获取用户地理信息权限，用于帮助精确统计开发者的程序发布之后的用户分布情况 -->
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
-	<!-- 读取网络信息权限，用于识别gprs网络的接入点的情况-->
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-
-<activity android:name="jemuillot.pkg.Utilities.AfterSalesFeedbackSelector"/>
-
 </manifest> 
