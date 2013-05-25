@@ -34,7 +34,7 @@
 		<link>
 			<name>Utilities_src</name>
 			<type>2</type>
-			<location>D:/X/creation/software/GoogleCode/utilities-for-android/src</location>
+			<locationURI>PARENT-1-PROJECT_LOC/utilities-for-android/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
