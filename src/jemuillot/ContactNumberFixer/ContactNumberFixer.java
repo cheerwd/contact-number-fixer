@@ -92,6 +92,7 @@ public class ContactNumberFixer extends Activity {
 	
 	private static final String updateUrl = "http://contact-number-fixer.googlecode.com/files/updateinfox.sui";
 	private static final String donateUrl = "https://me.alipay.com/jemuillot";
+	private static final String homepageUrl = "http://code.google.com/p/contact-number-fixer";
 
 	private Handler mHandler = new Handler();
 
@@ -118,7 +119,7 @@ public class ContactNumberFixer extends Activity {
 		afterTaste.donate(donateUrl);
 	}
 	private void feedback() {
-		afterTaste.feedback(null);
+		afterTaste.feedback(null, homepageUrl);
 	}
 
 	private void share() {
