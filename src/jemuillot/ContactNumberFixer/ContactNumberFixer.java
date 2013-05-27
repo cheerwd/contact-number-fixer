@@ -87,12 +87,13 @@ class ContactsPhoneNumberResolver7 implements ContactsPhoneNumberResolver {
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String downloadUrl = 
-		"http://contact-number-fixer.googlecode.com/files/ContactNumberFixer-1.06.apk";
+	private static final String downloadUrl
+	= "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-1.0.6.apk";
 	
-	private static final String updateUrl = "http://contact-number-fixer.googlecode.com/files/updateinfox.sui";
-	private static final String donateUrl = "https://me.alipay.com/jemuillot";
-	private static final String homepageUrl = "http://code.google.com/p/contact-number-fixer";
+	private static final String updateUrl
+	= "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.sui";
+	private static final String homepageUrl
+	= "http://code.google.com/p/contact-number-fixer";
 
 	private Handler mHandler = new Handler();
 
@@ -116,7 +117,7 @@ public class ContactNumberFixer extends Activity {
 	}
 
 	private void donate() {
-		afterTaste.donate(donateUrl);
+		afterTaste.donate(null);
 	}
 	private void feedback() {
 		afterTaste.feedback(null, homepageUrl);
