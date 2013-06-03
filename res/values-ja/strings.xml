@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="warning">すべての電話番号の「-」を削除してもいいですか？</string>
-	<string name="app_name">電話番号の「-」を消そう</string>
+	<string name="app_name">電話番号フィクサー</string>
 	<string name="ok">はい</string>
 	<string name="quit">いいえ</string>
 	<string name="finished">削除完了</string>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="warning">確定移除所有聯系人號碼中的橫線\'-\'嗎？</string>
-	<string name="app_name">聯系人號碼修複工具</string>
+	<string name="warning">確定移除所有聯絡人號碼中的橫線\'-\'嗎？</string>
+	<string name="app_name">聯絡人號碼修複工具</string>
 	<string name="ok">確定</string>
 	<string name="quit">放棄</string>
 	<string name="finished">所有電話號碼已經修複</string>
 
-	<string name="noContact">沒找到聯系人記錄</string>
+	<string name="noContact">沒找到聯絡人記錄</string>
 
 
 <string name="unchanged">沒有需要修複的號碼</string>

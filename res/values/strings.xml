@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-	<string name="warning">Press OK to remove the minus \'-\' from all the phone
-		numbers.
-		</string>
-	<string name="app_name">Contact Number Fixer</string>
-	<string name="ok">OK</string>
-	<string name="quit">Quit</string>
-	<string name="finished">All phone numbers have been fixed!</string>
 
-<string name="noContact">Contact Not Found</string>
+    <string name="warning">Press OK to remove the minus \'-\' from all the phone
+		numbers.</string>
+    <string name="app_name">Contact Number Fixer</string>
+    <string name="whichToRemove">Please Check the Extra Items to Remove</string>
+    <string name="ok">OK</string>
+    <string name="quit">Quit</string>
+    <string name="finished">All phone numbers have been fixed!</string>
+    <string name="noContact">Contact Not Found</string>
+    <string name="unchanged">No numbers need to be fixed</string>
+    <string name="ftRemoveMinus">Remove Minus</string>
+    <string name="ftRemoveCountry">Remove Country Code</string>
+    <string name="ftRemoveArea">Remove Area Code</string>
+    <string name="countryCode">Country Code</string>
+    <string name="areaCode">Area Code</string>
+    <string name="mobilePrefix">Mobile Prefixes</string>
+    <string name="enterMobilePrefix">Enter Mobile Prefixes</string>
+    <string name="warnEmptyCode">The Code is Empty!</string>
+    <string name="warnEmptyMobilePrefix">The Prefix of mobile must be spcified!</string>
+    <string name="warnEmptyCountryButArea">If the Country Code is Empty, I CANNOT remove the area code if the country code is present in the number!</string>
 
-
-
-<string name="unchanged">No numbers need to be fixed</string>
 </resources>
