@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="warning">すべての電話番号の「-」を削除してもいいですか？</string>
-	<string name="app_name">電話番号フィクサー</string>
-	<string name="ok">はい</string>
-	<string name="quit">いいえ</string>
-	<string name="finished">削除完了</string>
 
-	<string name="noContact">連絡先がありません</string>
+    <string name="warning">すべての電話番号の「-」を削除してもいいですか？</string>
+    <string name="app_name">電話番号フィクサー</string>
+    <string name="finished">削除完了</string>
+    <string name="noContact">連絡先がありません</string>
+    <string name="unchanged">修復の必要はなさそうです</string>
+    <string name="ftRemoveArea">市外局番号を削除</string>
+    <string name="ftRemoveCountry">国番号を削除</string>
+    <string name="whichToRemove">番号も削除したいですか？</string>
+    <string name="aboutPrefix">携帯のプリフィクスについて</string>
+    <string name="areaCode">市外局番号</string>
+    <string name="countryCode">国番号</string>
+    <string name="warnEmptyCode">番号を入力してください</string>
+    <string name="warnEmptyMobilePrefix">携帯のプリフィクスを入力してください</string>
+    <string name="warnEmptyCountryButArea">国番号を入力しないと、
+        国番号をつけた電話番号から市外局番号を外せないのですよ。</string>
+    <string name="defaultCountryCode">81</string>
+    <string name="defaultAreaCode">0742</string>
+    <string name="defaultMobilePrefix">080,090,070</string>
+    <string name="enterMobilePrefix">携帯のプリフィクスを入力</string>
+    <string name="introPrefix">携帯のプリフィクスとはこの数字のどいつで始まる番号を携帯電話の番号として認めた接頭番号であります。
+        日本ではほぼ080と090と070です。次の入力を<b>080,090,070</b>に確認してください。
+        国番号を抜いた後、あれ以外の全ての番号は市外局番号として<b>0</b>を前につけることになります。</string>
 
-
-<string name="unchanged">修復の必要はなさそうです</string>
 </resources>

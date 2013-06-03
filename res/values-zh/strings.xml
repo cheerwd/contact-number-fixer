@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="warning">确定移除所有联系人号码中的横线\'-\'吗？</string>
-	<string name="app_name">联系人号码修复工具</string>
-	<string name="ok">确定</string>
-	<string name="quit">退出</string>
-	<string name="finished">所有电话号码已经修复</string>
 
-	<string name="noContact">没找到联系人记录</string>
+    <string name="warning">确定移除所有联系人号码中的横线\'-\'吗？</string>
+    <string name="app_name">联系人号码修复工具</string>
+    <string name="finished">所有电话号码已经修复</string>
+    <string name="noContact">没找到联系人记录</string>
+    <string name="unchanged">没有需要修复的号码</string>
+    <string name="ftRemoveArea">删除区号</string>
+    <string name="ftRemoveCountry">删除国际区号</string>
+    <string name="aboutPrefix">关于手机号码前缀</string>
+    <string name="areaCode">区号</string>
+    <string name="countryCode">国际区号</string>
+    <string name="warnEmptyCode">请输入区号</string>
+    <string name="whichToRemove">要连同区号一起删除吗？</string>
+    <string name="warnEmptyMobilePrefix">请输入手机号码前缀</string>
+    <string name="warnEmptyCountryButArea">在没有指定国际区号的情况下，
+        是无法从含有国家区号的电话号码中去除区号的。</string>
+    <string name="defaultCountryCode">86</string>
+    <string name="defaultAreaCode">020</string>
+    <string name="defaultMobilePrefix">13,15,18</string>
+    <string name="enterMobilePrefix">输入手机号码前缀</string>
+    <string name="introPrefix">手机号码前缀用于识别手机号码。
+        当删除了国际区号之后，紧跟着的号码如果与前缀不一致，则被判定为区号，就会在之前添加一个<b>0</b>。
+        为了避免给手机加上<b>0</b>，必须指定所有可能的手机号码前缀。
+   下一步将提示输入手机前缀，在中国的情况，基本就是13,15和18。因此只要确认输入框是否为 <b>13,15,18</b>即可。</string>
 
-
-<string name="unchanged">没有需要修复的号码</string>
 </resources>

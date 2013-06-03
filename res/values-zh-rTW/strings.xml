@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="warning">確定移除所有聯絡人號碼中的橫線\'-\'嗎？</string>
-	<string name="app_name">聯絡人號碼修複工具</string>
-	<string name="ok">確定</string>
-	<string name="quit">放棄</string>
-	<string name="finished">所有電話號碼已經修複</string>
 
-	<string name="noContact">沒找到聯絡人記錄</string>
+    <string name="warning">確定移除所有聯絡人號碼中的橫線\'-\'嗎？</string>
+    <string name="app_name">聯絡人號碼修複工具</string>
+    <string name="finished">所有電話號碼已經修複</string>
+    <string name="noContact">沒找到聯絡人記錄</string>
+    <string name="unchanged">沒有需要修複的號碼</string>
+    <string name="ftRemoveArea">刪除區號</string>
+    <string name="ftRemoveCountry">刪除國際區號</string>
+    <string name="aboutPrefix">關于手機號碼前綴</string>
+    <string name="areaCode">區號</string>
+    <string name="countryCode">國際區號</string>
+    <string name="warnEmptyCode">請輸入區號</string>
+    <string name="whichToRemove">要連同區號一起刪除嗎？</string>
+    <string name="warnEmptyMobilePrefix">請輸入手機號碼前綴</string>
+    <string name="warnEmptyCountryButArea">在沒有指定國際區號的情況下，
+        是無法從含有國家區號的電話號碼中去除區號的。</string>
+    <string name="defaultCountryCode">886</string>
+    <string name="defaultAreaCode">02</string>
+    <string name="defaultMobilePrefix">09</string>
+    <string name="enterMobilePrefix">輸入手機號碼前綴</string>
+    <string name="introPrefix">手機號碼前綴用于識別手機號碼。
+        當刪除了國際區號之後，緊跟著的號碼如果與前綴不一致，則被判定爲區號。就會在之前添加一個<b>0</b>。爲了避免給手機加上<b>0</b>，必須指定所有可能的手機號碼前綴。
+   下一步將提示輸入手機前綴，在台湾的情況，基本就是09。因此只要確認輸入框是否爲 <b>09</b>即可。</string>
 
-
-<string name="unchanged">沒有需要修複的號碼</string>
 </resources>

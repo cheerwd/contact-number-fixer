@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jemuillot.pkg.Utilities.AfterTaste;
+import jemuillot.ContactNumberFixer.R;
 import jemuillot.pkg.Utilities.SelfUpdater;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -240,19 +241,19 @@ public class ContactNumberFixer extends Activity {
 		countryCode = prefs.getString("countryCode", null);
 
 		if (countryCode == null) {
-			countryCode = "86";
+			countryCode = getString(R.string.defaultCountryCode);
 		}
 
 		areaCode = prefs.getString("areaCode", null);
 
 		if (areaCode == null) {
-			areaCode = "020";
+			areaCode = getString(R.string.defaultAreaCode);
 		}
 
 		String mp = prefs.getString("mobiePrefix", null);
 
 		if (mp == null) {
-			mp = "13,15,18";
+			mp = getString(R.string.defaultMobilePrefix);
 		}
 
 		mobilePrefixList = stringToMobilePrefix(mp);
@@ -362,7 +363,7 @@ public class ContactNumberFixer extends Activity {
 
 		ccedit.setText(countryCode);
 		acedit.setText(areaCode);
-		
+
 		ccchk.setChecked(bRemoveCountry);
 		acchk.setChecked(bRemoveArea);
 
@@ -425,11 +426,11 @@ public class ContactNumberFixer extends Activity {
 
 					@Override
 					public void onCancel(DialogInterface dialog) {
-	
+
 						a.finish();
 					}
 				})
-				.setPositiveButton(R.string.ok,
+				.setPositiveButton(R.string.utilPopStrOK,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
@@ -440,30 +441,19 @@ public class ContactNumberFixer extends Activity {
 								areaCode = StringToDigits(acedit.getText()
 										.toString());
 
-								bRemoveArea = acchk.isChecked() && (areaCode.length()>0);
+								bRemoveArea = acchk.isChecked()
+										&& (areaCode.length() > 0);
 
-								bRemoveCountry = ccchk.isChecked() && (countryCode.length()>0);
+								bRemoveCountry = ccchk.isChecked()
+										&& (countryCode.length() > 0);
 
 								if (bRemoveCountry) {
-									LayoutInflater factory = LayoutInflater
-											.from(a);
-
-									final View mpEntryView = factory.inflate(
-											R.layout.dlg_mobileprefix, null);
-
-									final EditText mpedit = (EditText) mpEntryView
-											.findViewById(R.id.mobilePrefix_edit);
-
-									String mpStr = mobilePrefixToStr(mobilePrefixList);
-
-									mpedit.setText(mpStr);
 
 									saveSettings();
 
 									new AlertDialog.Builder(a)
-											.setTitle(
-													R.string.enterMobilePrefix)
-											.setView(mpEntryView)
+											.setTitle(R.string.aboutPrefix)
+											.setMessage(R.string.introPrefix)
 											.setOnCancelListener(
 													new DialogInterface.OnCancelListener() {
 
@@ -475,53 +465,97 @@ public class ContactNumberFixer extends Activity {
 														}
 													})
 											.setPositiveButton(
-													R.string.ok,
+													R.string.utilPopStrOK,
 													new DialogInterface.OnClickListener() {
 
+														@Override
 														public void onClick(
 																DialogInterface dialog,
-																int whichButton) {
+																int which) {
 
-															String mpStr = mpedit
-																	.getText()
-																	.toString();
+															LayoutInflater factory = LayoutInflater
+																	.from(a);
 
-															mobilePrefixList = stringToMobilePrefix(mpStr);
+															final View mpEntryView = factory
+																	.inflate(
+																			R.layout.dlg_mobileprefix,
+																			null);
 
-															if (mobilePrefixList
-																	.isEmpty()) {
+															final EditText mpedit = (EditText) mpEntryView
+																	.findViewById(R.id.mobilePrefix_edit);
 
-																Toast.makeText(
-																		a,
-																		R.string.warnEmptyMobilePrefix,
-																		Toast.LENGTH_LONG)
-																		.show();
+															String mpStr = mobilePrefixToStr(mobilePrefixList);
 
-																startFromConfig();
+															mpedit.setText(mpStr);
 
-															} else {
-																saveSettings();
+															new AlertDialog.Builder(
+																	a)
+																	.setTitle(
+																			R.string.enterMobilePrefix)
+																	.setView(
+																			mpEntryView)
+																	.setOnCancelListener(
+																			new DialogInterface.OnCancelListener() {
 
-																final Cursor c = getPhoneList();
+																				@Override
+																				public void onCancel(
+																						DialogInterface dialog) {
+																					startFromConfig();
 
-																FixNumbers(c);
-															}
+																				}
+																			})
+																	.setPositiveButton(
+																			R.string.utilPopStrOK,
+																			new DialogInterface.OnClickListener() {
+
+																				public void onClick(
+																						DialogInterface dialog,
+																						int whichButton) {
+
+																					String mpStr = mpedit
+																							.getText()
+																							.toString();
+
+																					mobilePrefixList = stringToMobilePrefix(mpStr);
+
+																					if (mobilePrefixList
+																							.isEmpty()) {
+
+																						Toast.makeText(
+																								a,
+																								R.string.warnEmptyMobilePrefix,
+																								Toast.LENGTH_LONG)
+																								.show();
+
+																						startFromConfig();
+
+																					} else {
+																						saveSettings();
+
+																						final Cursor c = getPhoneList();
+
+																						FixNumbers(c);
+																					}
+																				}
+
+																			})
+																	.setNegativeButton(
+																			R.string.utilPopStrQuit,
+																			new DialogInterface.OnClickListener() {
+																				public void onClick(
+																						DialogInterface dialog,
+																						int whichButton) {
+																					a.finish();
+																				}
+																			})
+																	.create()
+																	.show();
 														}
 
-													})
-											.setNegativeButton(
-													R.string.quit,
-													new DialogInterface.OnClickListener() {
-														public void onClick(
-																DialogInterface dialog,
-																int whichButton) {
-															a.finish();
-														}
 													}).create().show();
+									;
 
-								}
-								else
-								{
+								} else {
 									final Cursor c = getPhoneList();
 
 									FixNumbers(c);
@@ -529,7 +563,7 @@ public class ContactNumberFixer extends Activity {
 
 							}
 						})
-				.setNegativeButton(R.string.quit,
+				.setNegativeButton(R.string.utilPopStrQuit,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int whichButton) {
@@ -697,9 +731,8 @@ public class ContactNumberFixer extends Activity {
 
 			if (number.startsWith(prefix)) {
 				String nwc = number.substring(prefix.length());
-				
-				if (nwc.length() < 9)
-				{
+
+				if (nwc.length() < 9) {
 					return number;
 				}
 
