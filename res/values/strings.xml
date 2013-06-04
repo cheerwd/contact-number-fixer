@@ -14,17 +14,17 @@
     <string name="enterMobilePrefix">Enter Mobile Prefixes</string>
     <string name="warnEmptyCode">The Code is Empty!</string>
     <string name="warnEmptyMobilePrefix">The Prefix of mobile must be spcified!</string>
-    <string name="warnEmptyCountryButArea">If the Country Code is Empty, 
+    <string name="warnEmptyCountryButArea">If the Country Code is Empty,
         the area code CANNOT be remvoed if the country code is present in the number!</string>
     <string name="aboutPrefix">About the Mobile Prefixes</string>
     <string name="defaultCountryCode">65</string>
     <string name="defaultAreaCode">206</string>
     <string name="defaultMobilePrefix">8,9</string>
-    <string name="introPrefix">Since you want to remove the country code, 
-        all the mobile prefixes that would available in the country are required. 
-        If all the mobiles start with 13, 16 or 19, 
-        you must fill <b>13,16,19</b> in the NEXT screen. 
-        The numbers starting with any one of the Mobile Prefixes will not be prefixed a <b>0</b> after its country code has been removed. 
-        Each mobile prefix can be sepeprated by non numerical characters and needn\'t to be sorted.</string>
+    <string name="introPrefix">Since you want to remove the country code,
+        all the mobile prefixes available in the country are required.
+        \nIf all the mobiles start with 13, 16 or 19,
+        you must fill <b>13,16,19</b> in the NEXT screen.
+        \nThe numbers starting with any one of the Mobile Prefixes will not be prefixed a <b>0</b> after its country code has been removed.
+        \nEach mobile prefix can be seperated by non numerical characters and needn\'t to be sorted.</string>
 
 </resources>

@@ -14,14 +14,13 @@
     <string name="countryCode">国番号</string>
     <string name="warnEmptyCode">番号を入力してください</string>
     <string name="warnEmptyMobilePrefix">携帯のプリフィクスを入力してください</string>
-    <string name="warnEmptyCountryButArea">国番号を入力しないと、
-        国番号をつけた電話番号から市外局番号を外せないのですよ。</string>
+    <string name="warnEmptyCountryButArea">国番号を入力しないと、国番号をつけた電話番号から市外局番号を外せないのですよ。</string>
     <string name="defaultCountryCode">81</string>
     <string name="defaultAreaCode">0742</string>
     <string name="defaultMobilePrefix">080,090,070</string>
     <string name="enterMobilePrefix">携帯のプリフィクスを入力</string>
     <string name="introPrefix">携帯のプリフィクスとはこの数字のどいつで始まる番号を携帯電話の番号として認めた接頭番号であります。
-        日本ではほぼ080と090と070です。次の入力を<b>080,090,070</b>に確認してください。
-        国番号を抜いた後、あれ以外の全ての番号は市外局番号として<b>0</b>を前につけることになります。</string>
+        \n日本ではほぼ080と090と070です。次の入力を<b>080,090,070</b>に確認してください。
+        \n国番号を抜いた後、あれ以外の全ての番号は市外局番号として<b>0</b>を前につけることになります。</string>
 
 </resources>
