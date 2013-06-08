@@ -1,26 +1,25 @@
 package jemuillot.ContactNumberFixer;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import jemuillot.pkg.Utilities.AfterTaste;
-import jemuillot.ContactNumberFixer.R;
 import jemuillot.pkg.Utilities.SelfUpdater;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Contacts;
-import android.provider.ContactsContract;
+import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,68 +33,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-@SuppressWarnings("deprecation")
-interface ContactsPhoneNumberResolver {
-	public Uri getUri();
-
-	public String getID();
-
-	public String getNumber();
-
-	public void update(ContentResolver cr, String id, ContentValues values);
-}
-
-@SuppressWarnings("deprecation")
-class ContactsPhoneNumberResolver3 implements ContactsPhoneNumberResolver {
-
-	@Override
-	public String getID() {
-		return Contacts.Phones._ID;
-	}
-
-	@Override
-	public String getNumber() {
-		return Contacts.Phones.NUMBER;
-	}
-
-	@Override
-	public Uri getUri() {
-		return Contacts.Phones.CONTENT_URI;
-	}
-
-	@Override
-	public void update(ContentResolver cr, String id, ContentValues values) {
-		cr.update(
-				ContentUris.withAppendedId(Contacts.Phones.CONTENT_URI,
-						Integer.parseInt(id)), values, null, null);
-
-	}
-}
-
-class ContactsPhoneNumberResolver7 implements ContactsPhoneNumberResolver {
-
-	@Override
-	public String getID() {
-		return ContactsContract.CommonDataKinds.Phone._ID;
-	}
-
-	@Override
-	public String getNumber() {
-		return ContactsContract.CommonDataKinds.Phone.NUMBER;
-	}
-
-	@Override
-	public Uri getUri() {
-		return ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-	}
-
-	@Override
-	public void update(ContentResolver cr, String id, ContentValues values) {
-		String where = ContactsContract.CommonDataKinds.Phone._ID + " = " + id;
-		cr.update(ContactsContract.Data.CONTENT_URI, values, where, null);
-	}
-}
-
 public class ContactNumberFixer extends Activity {
 
 	private static final String downloadUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-1.1.0.apk";
@@ -104,31 +41,44 @@ public class ContactNumberFixer extends Activity {
 
 	private static final String homepageUrl = "http://code.google.com/p/contact-number-fixer";
 
-	private Handler mHandler = new Handler();
-
-	private int idColumn;
-	private int numberColumn;
-	private boolean finished;
-	private boolean finished_shown;
-
-	private boolean isPaused;
+	protected static final int BUMP_MSG_FIX_PROC = 0;
 
 	private Activity a;
 
-	private ContactsPhoneNumberResolver contactsPhoneNumberResolver;
 	private SelfUpdater updater;
 
-	private AfterTaste afterTaste;
+	boolean bRemoveCountry = false;
+	boolean bRemoveArea = false;
 
-	private boolean bRemoveCountry = false;
-	private boolean bRemoveArea = false;
+	String countryCode;
+	String areaCode;
 
-	private String countryCode;
-	private String areaCode;
+	List<String> mobilePrefixList;
 
-	private List<String> mobilePrefixList;
+	protected FixContactService mBoundService;
 
-	private boolean canPause;
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+
+			mBoundService = ((FixContactService.FixContactBinder) service)
+					.getService();
+
+			mBoundService.setCallback(ContactNumberFixer.this);
+
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+
+			mBoundService = null;
+
+		}
+	};
+
+	AfterTaste afterTaste;
+
+	ListView logger;
+
+	ArrayAdapter<String> ad;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,24 +124,57 @@ public class ContactNumberFixer extends Activity {
 
 		a = this;
 
-		isPaused = false;
-
-		finished = true;
-
 		afterTaste = new AfterTaste(this);
 
 		updater = new SelfUpdater(this);
 
 		updater.setUrl(updateUrl);
 
-		updater.check();
+		logger = (ListView) findViewById(R.id.logger);
 
-		if (Integer.parseInt(Build.VERSION.SDK) >= 7)
-			contactsPhoneNumberResolver = new ContactsPhoneNumberResolver7();
-		else
-			contactsPhoneNumberResolver = new ContactsPhoneNumberResolver3();
+		ad = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
-		startFromConfig();
+		logger.setOnItemClickListener(new ListView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				int total = parent.getCount();
+
+				if (position + 1 == total) {
+					share();
+				} else if (position + 2 == total) {
+					feedback();
+				} else if (position + 3 == total) {
+					donate();
+				}
+
+			}
+		});
+
+		logger.setAdapter(ad);
+
+		Intent intent = getIntent();
+
+		if (intent.getBooleanExtra(FixContactService.FROM_SERVICE, false)) {
+
+			ArrayList<String> logs = intent
+					.getStringArrayListExtra(FixContactService.LOGS);
+
+			if (logs == null) {
+				FixNumbers();
+			} else {
+
+				pushLogs(logs);
+
+			}
+
+		} else {
+			updater.check();
+
+			startFromConfig();
+		}
+
 	}
 
 	protected String fixEdit(EditText edit) {
@@ -306,36 +289,22 @@ public class ContactNumberFixer extends Activity {
 	public void onPause() {
 		super.onPause(); // Always call the superclass method first
 
-		if (!finished) {
-			canPause = false;
-
-			isPaused = true;
-
-			while (!canPause) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
-	/**
-	 * Get the list of all phone numbers
-	 */
-	private Cursor getPhoneList() {
+	@Override
+	protected void onStop() {
+		super.onStop(); // Always call the superclass method first
 
-		Uri uri = contactsPhoneNumberResolver.getUri();
+		if (mBoundService != null)
+			mBoundService.onVisibilityChange(false);
+	}
 
-		// ID & Number should be enough for the subsequence operations
-		String[] projection = new String[] {
-				contactsPhoneNumberResolver.getID(),
-				contactsPhoneNumberResolver.getNumber() };
+	@Override
+	protected void onStart() {
+		super.onStart(); // Always call the superclass method first
 
-		return managedQuery(uri, projection, null, null, null);
-
+		if (mBoundService != null)
+			mBoundService.onVisibilityChange(true);
 	}
 
 	private void startFromConfig() {
@@ -383,6 +352,9 @@ public class ContactNumberFixer extends Activity {
 
 						ccchk.setChecked(false);
 					}
+				} else if (acchk.isChecked()) {
+					Toast.makeText(a, R.string.warnEmptyCountryButArea,
+							Toast.LENGTH_LONG).show();
 				}
 
 			}
@@ -532,9 +504,7 @@ public class ContactNumberFixer extends Activity {
 																					} else {
 																						saveSettings();
 
-																						final Cursor c = getPhoneList();
-
-																						FixNumbers(c);
+																						FixNumbers();
 																					}
 																				}
 
@@ -556,9 +526,7 @@ public class ContactNumberFixer extends Activity {
 									;
 
 								} else {
-									final Cursor c = getPhoneList();
-
-									FixNumbers(c);
+									FixNumbers();
 								}
 
 							}
@@ -572,198 +540,58 @@ public class ContactNumberFixer extends Activity {
 						}).create().show();
 	}
 
-	private void FixNumbers(final Cursor cur) {
+	private void FixNumbers() {
 
-		if (cur.moveToFirst()) {
+		bindService(
+				new Intent(ContactNumberFixer.this, FixContactService.class),
+				mConnection, Context.BIND_AUTO_CREATE);
 
-			idColumn = cur.getColumnIndex(contactsPhoneNumberResolver.getID());
+	}
 
-			numberColumn = cur.getColumnIndex(contactsPhoneNumberResolver
-					.getNumber());
+	public void addText(String text) {
+		ad.add(text);
+	}
 
-			final ListView logger = (ListView) findViewById(R.id.logger);
+	protected void onDestroy() {
+		super.onDestroy();
 
-			final ArrayAdapter<String> ad = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1);
-
-			logger.setOnItemClickListener(new ListView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-
-					int total = parent.getCount();
-
-					if (position + 1 == total) {
-						share();
-					} else if (position + 2 == total) {
-						feedback();
-					} else if (position + 3 == total) {
-						donate();
-					}
-
-				}
-			});
-
-			logger.setAdapter(ad);
-
-			finished = false;
-
-			// Start lengthy operation in a background thread
-			new Thread(new Runnable() {
-				public void run() {
-					while (!finished) {
-
-						if (isPaused) {
-							canPause = true;
-
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-							a.finish();
-
-							break;
-						}
-
-						final String text = doWork(cur);
-
-						// Update the progress bar
-						mHandler.post(new Runnable() {
-
-							public void run() {
-
-								if (finished_shown)
-									return;
-
-								if (text != null) {
-									ad.add(text);
-								}
-								// else {
-								// ad.add("no conv");
-								// }
-								if (finished) {
-									finished_shown = true;
-
-									afterTaste.showDonateClickHint();
-
-									if (ad.isEmpty())
-										ad.add(getString(R.string.unchanged));
-									else
-										ad.add(getString(R.string.finished));
-
-									ad.add(getString(R.string.afterTasteDonate));
-									ad.add(getString(R.string.afterTasteFeedback));
-									ad.add(getString(R.string.afterTasteShare));
-								}
-
-								logger.setSelection(ad.getCount() - 1);
-							}
-						});
-					}
-
-				}
-			}).start();
-
-		} else {
-			Toast.makeText(a, R.string.noContact, Toast.LENGTH_LONG).show();
+		if (mBoundService != null) {
+			unbindService(mConnection);
 		}
 
 	}
 
-	private String doWork(Cursor cur) {
-		String ret = null;
-
-		String id = cur.getString(idColumn);
-		String number = cur.getString(numberColumn);
-		String logFrom = number;
-
-		number = removeMinus(number);
-
-		if (bRemoveCountry) {
-			number = removeCountry(number);
-
-			if (bRemoveArea) {
-				number = removeArea(number);
-			}
-		}
-
-		if (!logFrom.equals(number)) {
-			ContentValues values = new ContentValues();
-
-			values.put(contactsPhoneNumberResolver.getNumber(), number);
-
-			ret = logFrom + "\n==>" + number;
-
-			contactsPhoneNumberResolver
-					.update(getContentResolver(), id, values);
-		}
-
-		finished = !cur.moveToNext();
-
-		return ret;
+	public void removeLast(String last) {
+		ad.remove(last);
 	}
 
-	private String removeArea(String number) {
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		String prefix = areaCode;
-
-		if (number.startsWith(prefix)) {
-			String ret = number.substring(prefix.length());
-
-			if (ret.length() > 6)
-				return ret;
+		if (mBoundService != null && !mBoundService.finished_shown
+				&& Integer.valueOf(android.os.Build.VERSION.SDK) < 7
+				&& keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getRepeatCount() == 0) {
+			onBackPressed();
 		}
 
-		return number;
+		return super.onKeyDown(keyCode, event);
 	}
 
-	private String removeCountry(String number) {
-
-		final String[] countryPrefix = { "", "+", "00", "001", "0011", "002",
-				"005", "009", "01", "010", "011", "07", "09", "097", "16",
-				"19", "95", "990" };
-
-		for (int i = 0; i < countryPrefix.length; i++) {
-			String prefix = countryPrefix[i] + countryCode;
-
-			if (number.startsWith(prefix)) {
-				String nwc = number.substring(prefix.length());
-
-				if (nwc.length() < 9) {
-					return number;
-				}
-
-				Iterator<String> it = mobilePrefixList.iterator();
-
-				while (it.hasNext()) {
-					if (nwc.startsWith(it.next())) {
-						return nwc;
-					}
-				}
-
-				// Prefix 0
-				return "0" + nwc;
-			}
-		}
-
-		return number;
-
+	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	public void onBackPressed() {
+		if (mBoundService != null && !mBoundService.finished_shown)
+			return;
+		super.onBackPressed();
 	}
 
-	private String removeMinus(final String number) {
-		String result = "";
-		// Remove '-' & ' ' from the Phone Number
-		for (int i = 0; i < number.length(); i++) {
-			char c = number.charAt(i);
-
-			if ((c != '-') && (c != ' ') && (c != '(') && (c != ')'))
-				result += c;
+	public void pushLogs(ArrayList<String> logs) {
+		
+		ad.clear();
+		
+		for (int i = 0; i < logs.size(); i++) {
+			ad.add(logs.get(i));
 		}
-
-		return result;
 
 	}
 
