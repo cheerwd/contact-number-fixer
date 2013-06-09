@@ -43,6 +43,8 @@ public class ContactNumberFixer extends Activity {
 
 	protected static final int BUMP_MSG_FIX_PROC = 0;
 
+	static final String KILLING_OLD = "jemuillot.ContactNumberFixer.killingOld";
+
 	private Activity a;
 
 	private SelfUpdater updater;
@@ -141,6 +143,10 @@ public class ContactNumberFixer extends Activity {
 
 				int total = parent.getCount();
 
+				if (total < 2) {
+					return;
+				}
+
 				if (position + 1 == total) {
 					share();
 				} else if (position + 2 == total) {
@@ -166,6 +172,10 @@ public class ContactNumberFixer extends Activity {
 			} else {
 
 				pushLogs(logs);
+
+				logger.setSelection(ad.getCount() - 1);
+
+				FixNumbers();
 
 			}
 
@@ -295,16 +305,28 @@ public class ContactNumberFixer extends Activity {
 	protected void onStop() {
 		super.onStop(); // Always call the superclass method first
 
-		if (mBoundService != null)
-			mBoundService.onVisibilityChange(false);
+		if (mBoundService != null) {
+			if (mBoundService.finished_shown && ad.getCount() < 2) {
+				finish();
+			} else {
+				mBoundService.onVisibilityChange(false);
+			}
+		}
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart(); // Always call the superclass method first
 
-		if (mBoundService != null)
+		if (mBoundService != null) {
 			mBoundService.onVisibilityChange(true);
+		}
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart(); // Always call the superclass method first
+
 	}
 
 	private void startFromConfig() {
@@ -580,15 +602,29 @@ public class ContactNumberFixer extends Activity {
 
 	@TargetApi(Build.VERSION_CODES.ECLAIR)
 	public void onBackPressed() {
-		if (mBoundService != null && !mBoundService.finished_shown)
-			return;
+		if (mBoundService != null) {
+
+			if (mBoundService.finished_shown) {
+				finish();
+				return;
+			} else {
+
+				Intent i = new Intent(Intent.ACTION_MAIN);
+
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				i.addCategory(Intent.CATEGORY_HOME);
+
+				startActivity(i);
+				return;
+			}
+		}
 		super.onBackPressed();
 	}
 
 	public void pushLogs(ArrayList<String> logs) {
-		
+
 		ad.clear();
-		
+
 		for (int i = 0; i < logs.size(); i++) {
 			ad.add(logs.get(i));
 		}

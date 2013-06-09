@@ -17,9 +17,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Process;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
 
@@ -97,6 +99,7 @@ public class FixContactService extends Service {
 	public static final String LOGS = "jemuillot.ContactNumberFixer.logs";
 
 	ContactNumberFixer callback;
+	private ContactNumberFixer newCallback;
 
 	boolean bRemoveCountry = false;
 	boolean bRemoveArea = false;
@@ -105,8 +108,6 @@ public class FixContactService extends Service {
 	private String areaCode;
 
 	List<String> mobilePrefixList;
-
-	private boolean callbackUpdated;
 
 	void setCallback(ContactNumberFixer cb) {
 
@@ -124,13 +125,18 @@ public class FixContactService extends Service {
 			else
 				contactsPhoneNumberResolver = new ContactsPhoneNumberResolver3();
 
+			isVisible = true;
+
 		} else {
-			callback = cb;
 
-			callbackUpdated = true;
+			if (finished_shown) {
+				callback.finish();
+
+				callback = null;
+			} else {
+				newCallback = cb;
+			}
 		}
-
-		isVisible = true;
 
 	}
 
@@ -142,6 +148,13 @@ public class FixContactService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
+
+		if (intent.getBooleanExtra(ContactNumberFixer.KILLING_OLD, false)) {
+			callback.finish();
+
+			return null;
+
+		}
 		return mBinder;
 	}
 
@@ -182,9 +195,11 @@ public class FixContactService extends Service {
 					sendMessageDelayed(obtainMessage(MSG_OPEN_CONTACTS), 1000);
 				else {
 
-					openContacts();
+					if (openContacts())
+						sendMessage(obtainMessage(MSG_FIX_CONTACTS));
+					else
+						FixContactService.this.stopSelf();
 
-					sendMessage(obtainMessage(MSG_FIX_CONTACTS));
 				}
 			}
 
@@ -238,7 +253,7 @@ public class FixContactService extends Service {
 
 	}
 
-	public void openContacts() {
+	public boolean openContacts() {
 
 		logs = new ArrayList<String>();
 
@@ -253,13 +268,31 @@ public class FixContactService extends Service {
 					.getColumnIndex(contactsPhoneNumberResolver.getNumber());
 
 			finished = false;
+
+			return true;
+		} else {
+			finished = true;
+			finished_shown = true;
+
+			pushText(getString(R.string.noContact));
+
+			return false;
 		}
 	}
 
 	public boolean fixContacts() {
 
-		if (callbackUpdated) {
-			callbackUpdated = false;
+		if (newCallback != null) {
+
+			mNM.cancelAll();
+
+			callback.finish();
+
+			callback = newCallback;
+
+			newCallback = null;
+
+			isVisible = true;
 
 			callback.pushLogs(logs);
 
@@ -422,7 +455,7 @@ public class FixContactService extends Service {
 
 	private String removeMinus(final String number) {
 		String result = "";
-		// Remove '-' & ' ' from the Phone Number
+		// Remove '-()' & ' ' from the Phone Number
 		for (int i = 0; i < number.length(); i++) {
 			char c = number.charAt(i);
 
@@ -450,8 +483,9 @@ public class FixContactService extends Service {
 
 		intentForExtra.putExtra(FROM_SERVICE, true);
 
-		if (finished_shown)
+		if (finished_shown) {
 			intentForExtra.putStringArrayListExtra(LOGS, logs);
+		}
 
 		// The PendingIntent to launch our activity if the user selects this
 		// notification
@@ -470,8 +504,21 @@ public class FixContactService extends Service {
 
 	public void onVisibilityChange(boolean visible) {
 
+		if (finished_shown) {
+			if (visible) {
+				mNM.cancelAll();
+				
+				callback.pushLogs(logs);
+
+				callback.logger.setSelection(callback.ad.getCount() - 1);
+			}
+			return;
+		}
+
 		if (isVisible && !visible) {
 			showNotification();
+		} else if (visible && !isVisible) {
+			mNM.cancelAll();
 		}
 
 		isVisible = visible;
