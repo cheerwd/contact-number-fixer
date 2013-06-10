@@ -227,11 +227,11 @@ public class FixContactService extends Service {
 
 	private int numberColumn;
 
-	private String removeLast;
-
 	private boolean isVisible;
 
 	private ArrayList<String> logs;
+
+	private int zombieCounter;
 
 	/**
 	 * Get the list of all phone numbers
@@ -290,14 +290,14 @@ public class FixContactService extends Service {
 
 			isVisible = true;
 
-			callback.pushLogs(logs);
+			//callback.pushLogs(logs);
 
 		}
 
 		if (finished)
 			return false;
 
-		doWork(contactCursor);
+		final String processing = doWork(contactCursor);
 
 		if (finished) {
 			finished_shown = true;
@@ -320,7 +320,20 @@ public class FixContactService extends Service {
 		}
 
 		if (isVisible) {
-			callback.logger.setSelection(callback.ad.getCount() - 1);
+
+			zombieCounter++;
+
+			if (zombieCounter > 50 || finished_shown) {
+				zombieCounter = 0;
+				callback.pushLogs(logs);
+				
+				if (processing != null && !finished_shown)
+				{
+					callback.ad.add(processing + " ...");
+				}
+				
+				callback.logger.setSelection(callback.ad.getCount() - 1);
+			}
 		}
 
 		return true;
@@ -335,26 +348,13 @@ public class FixContactService extends Service {
 		}
 	}
 
-	private void doWork(Cursor cur) {
+	private String doWork(Cursor cur) {
+		
 		String ret = null;
 
 		String id = cur.getString(idColumn);
 		String number = cur.getString(numberColumn);
 		String logFrom = number;
-
-		if (removeLast != null) {
-			removeTail();
-		}
-
-		boolean updateText = isVisible;
-
-		if (updateText) {
-			removeLast = number;
-
-			pushText(number);
-		} else {
-			removeLast = null;
-		}
 
 		number = removeMinus(number);
 
@@ -374,32 +374,19 @@ public class FixContactService extends Service {
 
 			ret = logFrom + "\n¡ú" + number;
 
-			if (updateText) {
-				removeTail();
-
-				removeLast = null;
-
-				pushText(ret);
-			}
-
 			logs.add(ret);
 
 			contactsPhoneNumberResolver
 					.update(getContentResolver(), id, values);
+			
+			logFrom = null;
 
 		}
 
 		finished = !cur.moveToNext();
+		
+		return logFrom;
 
-		if (finished) {
-			removeTail();
-
-			removeLast = null;
-		}
-	}
-
-	private void removeTail() {
-		callback.removeLast(removeLast);
 	}
 
 	private String removeArea(String number) {
@@ -512,9 +499,8 @@ public class FixContactService extends Service {
 		if (finished_shown) {
 			if (visible) {
 				mNM.cancelAll();
-				
-				if (callback != null)
-				{
+
+				if (callback != null) {
 					callback.pushLogs(logs);
 
 					callback.logger.setSelection(callback.ad.getCount() - 1);

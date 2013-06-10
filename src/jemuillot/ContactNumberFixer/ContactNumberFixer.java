@@ -39,7 +39,8 @@ public class ContactNumberFixer extends Activity {
 
 	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.sui";
 
-	private static final String homepageUrl = "http://code.google.com/p/contact-number-fixer";
+	private static final String homepageUrl = 
+			"http://code.google.com/p/contact-number-fixer/wiki/CNFIntro%s";
 
 	protected static final int BUMP_MSG_FIX_PROC = 0;
 
@@ -92,9 +93,9 @@ public class ContactNumberFixer extends Activity {
 	private void donate() {
 		afterTaste.donate(null, null);
 	}
-
+	
 	private void feedback() {
-		afterTaste.feedback(null, homepageUrl);
+		afterTaste.feedback(null, homepageUrl, null);
 	}
 
 	private void share() {
@@ -583,9 +584,6 @@ public class ContactNumberFixer extends Activity {
 
 	}
 
-	public void removeLast(String last) {
-		ad.remove(last);
-	}
 
 	@SuppressWarnings("deprecation")
 	@Override
