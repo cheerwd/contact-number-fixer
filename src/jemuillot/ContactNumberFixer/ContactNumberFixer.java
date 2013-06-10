@@ -90,7 +90,7 @@ public class ContactNumberFixer extends Activity {
 	}
 
 	private void donate() {
-		afterTaste.donate(null);
+		afterTaste.donate(null, null);
 	}
 
 	private void feedback() {
