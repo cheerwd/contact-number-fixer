@@ -151,12 +151,6 @@ public class FixContactService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 
-		if (intent.getBooleanExtra(ContactNumberFixer.KILLING_OLD, false)) {
-			callback.finish();
-
-			return null;
-
-		}
 		return mBinder;
 	}
 
@@ -378,7 +372,7 @@ public class FixContactService extends Service {
 
 			values.put(contactsPhoneNumberResolver.getNumber(), number);
 
-			ret = logFrom + "\n==>" + number;
+			ret = logFrom + "\n¡ú" + number;
 
 			if (updateText) {
 				removeTail();
@@ -478,18 +472,16 @@ public class FixContactService extends Service {
 				: R.string.bg);
 
 		Notification notification = new Notification(
-				finished_shown?R.drawable.done:
-				R.drawable.bg, text,
+				finished_shown ? R.drawable.done : R.drawable.bg, text,
 				System.currentTimeMillis());
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		
-		if (finished_shown)
-		{
+
+		if (finished_shown) {
 			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-			
-			notification.ledARGB = Color.CYAN; 
-			
+
+			notification.ledARGB = Color.CYAN;
+
 		}
 
 		Intent intentForExtra = new Intent(this, ContactNumberFixer.class);
@@ -520,10 +512,14 @@ public class FixContactService extends Service {
 		if (finished_shown) {
 			if (visible) {
 				mNM.cancelAll();
+				
+				if (callback != null)
+				{
+					callback.pushLogs(logs);
 
-				callback.pushLogs(logs);
+					callback.logger.setSelection(callback.ad.getCount() - 1);
+				}
 
-				callback.logger.setSelection(callback.ad.getCount() - 1);
 			}
 			return;
 		}
