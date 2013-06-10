@@ -587,6 +587,7 @@ public class ContactNumberFixer extends Activity {
 		ad.remove(last);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 

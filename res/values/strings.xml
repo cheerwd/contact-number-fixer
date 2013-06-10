@@ -25,6 +25,8 @@
         \nIf all the mobiles start with 13, 16 or 19,
         you must fill <b>13,16,19</b> in the NEXT screen.
         \nThe numbers starting with any one of the Mobile Prefixes will not be prefixed a <b>0</b> after its country code has been removed.
-        \nEach mobile prefix can be seperated by non numerical characters and needn\'t to be sorted.</string>
+        \nEach mobile prefix can be separated by non numerical characters and needn\'t to be sorted.</string>
+    <string name="bg">Processing in background</string>
+    <string name="bgDone">Processing done</string>
 
 </resources>

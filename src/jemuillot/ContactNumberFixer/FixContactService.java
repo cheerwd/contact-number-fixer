@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,14 +15,13 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.Process;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
 
@@ -63,6 +63,7 @@ class ContactsPhoneNumberResolver3 implements ContactsPhoneNumberResolver {
 	}
 }
 
+@TargetApi(Build.VERSION_CODES.ECLAIR)
 class ContactsPhoneNumberResolver7 implements ContactsPhoneNumberResolver {
 
 	@Override
@@ -109,6 +110,7 @@ public class FixContactService extends Service {
 
 	List<String> mobilePrefixList;
 
+	@SuppressWarnings("deprecation")
 	void setCallback(ContactNumberFixer cb) {
 
 		if (callback == null) {
@@ -467,17 +469,28 @@ public class FixContactService extends Service {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showNotification() {
 
 		mNM.cancelAll();
 
-		CharSequence text = finished_shown ? "Done" : "Background";
+		CharSequence text = getString(finished_shown ? R.string.bgDone
+				: R.string.bg);
 
-		// Set the icon, scrolling text and timestamp
-		Notification notification = new Notification(R.drawable.icon, text,
+		Notification notification = new Notification(
+				finished_shown?R.drawable.done:
+				R.drawable.bg, text,
 				System.currentTimeMillis());
 
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		
+		if (finished_shown)
+		{
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+			
+			notification.ledARGB = Color.CYAN; 
+			
+		}
 
 		Intent intentForExtra = new Intent(this, ContactNumberFixer.class);
 
@@ -507,7 +520,7 @@ public class FixContactService extends Service {
 		if (finished_shown) {
 			if (visible) {
 				mNM.cancelAll();
-				
+
 				callback.pushLogs(logs);
 
 				callback.logger.setSelection(callback.ad.getCount() - 1);
