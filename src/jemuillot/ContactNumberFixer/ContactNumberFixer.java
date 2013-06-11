@@ -7,6 +7,7 @@ import java.util.List;
 
 import jemuillot.pkg.Utilities.AfterTaste;
 import jemuillot.pkg.Utilities.LocalizedPath;
+import jemuillot.pkg.Utilities.PackApp;
 import jemuillot.pkg.Utilities.SelfUpdater;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -36,9 +37,9 @@ import android.widget.Toast;
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String downloadUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-1.1.0.apk";
+	private static final String downloadUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-%s.apk";
 
-	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.sui";
+	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.json";
 
 	private static final String homepageUrl = "http://code.google.com/p/contact-number-fixer/wiki/CNFIntro%s";
 
@@ -103,7 +104,9 @@ public class ContactNumberFixer extends Activity {
 	}
 
 	private void share() {
-		afterTaste.share(downloadUrl);
+
+		afterTaste.share(String.format(downloadUrl,
+				PackApp.getAppVersionName(this)));
 	}
 
 	@Override
