@@ -288,9 +288,9 @@ public class FixContactService extends Service {
 
 			newCallback = null;
 
-			isVisible = true;
+			zombieCounter = 50;
 
-			//callback.pushLogs(logs);
+			isVisible = true;
 
 		}
 
@@ -380,7 +380,8 @@ public class FixContactService extends Service {
 					.update(getContentResolver(), id, values);
 			
 			logFrom = null;
-
+			
+			zombieCounter += 6;
 		}
 
 		finished = !cur.moveToNext();
