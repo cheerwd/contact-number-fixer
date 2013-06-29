@@ -9,7 +9,6 @@ import jemuillot.pkg.Utilities.AfterTaste;
 import jemuillot.pkg.Utilities.LocalizedPath;
 import jemuillot.pkg.Utilities.PackApp;
 import jemuillot.pkg.Utilities.SelfUpdater;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -18,7 +17,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.KeyEvent;
@@ -37,7 +35,8 @@ import android.widget.Toast;
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String downloadUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-%s.apk";
+	private static final String downloadUrl = 
+			"http://contact-number-fixer.googlecode.com/files/cnf-%s.apk";
 
 	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.json";
 
@@ -605,7 +604,7 @@ public class ContactNumberFixer extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@TargetApi(Build.VERSION_CODES.ECLAIR)
+	@Override
 	public void onBackPressed() {
 		if (mBoundService != null) {
 
