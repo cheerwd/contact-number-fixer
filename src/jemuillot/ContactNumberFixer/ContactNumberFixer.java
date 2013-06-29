@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jemuillot.pkg.Utilities.AfterTaste;
+import jemuillot.pkg.Utilities.Andrutils;
 import jemuillot.pkg.Utilities.LocalizedPath;
 import jemuillot.pkg.Utilities.PackApp;
 import jemuillot.pkg.Utilities.SelfUpdater;
@@ -35,8 +36,7 @@ import android.widget.Toast;
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String downloadUrl = 
-			"http://contact-number-fixer.googlecode.com/files/cnf-%s.apk";
+	private static final String downloadUrl = "http://contact-number-fixer.googlecode.com/files/cnf-%s.apk";
 
 	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.json";
 
@@ -590,39 +590,32 @@ public class ContactNumberFixer extends Activity {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		if (mBoundService != null && !mBoundService.finished_shown
-				&& Integer.valueOf(android.os.Build.VERSION.SDK) < 7
-				&& keyCode == KeyEvent.KEYCODE_BACK
-				&& event.getRepeatCount() == 0) {
-			onBackPressed();
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			return false;
 		}
 
 		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (mBoundService != null) {
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
 
-			if (mBoundService.finished_shown) {
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& ((event.getFlags() & KeyEvent.FLAG_CANCELED) == 0)) {
+
+			if (mBoundService != null && !mBoundService.finished_shown) {
+				Andrutils.backToHome(this);
+			} else  {
 				finish();
-				return;
-			} else {
-
-				Intent i = new Intent(Intent.ACTION_MAIN);
-
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.addCategory(Intent.CATEGORY_HOME);
-
-				startActivity(i);
-				return;
 			}
+
+			return true;
 		}
-		super.onBackPressed();
+
+		return super.onKeyUp(keyCode, event);
 	}
 
 	public void pushLogs(ArrayList<String> logs) {
