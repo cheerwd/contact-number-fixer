@@ -36,7 +36,7 @@ import android.widget.Toast;
 
 public class ContactNumberFixer extends Activity {
 
-	private static final String downloadUrl = "http://contact-number-fixer.googlecode.com/files/cnf-%s.apk";
+	private static final String downloadUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/cnf-%s.apk";
 
 	private static final String updateUrl = "https://dl.dropboxusercontent.com/u/1890357/software/cnf/updateinfo.json";
 
@@ -608,7 +608,7 @@ public class ContactNumberFixer extends Activity {
 
 			if (mBoundService != null && !mBoundService.finished_shown) {
 				Andrutils.backToHome(this);
-			} else  {
+			} else {
 				finish();
 			}
 
