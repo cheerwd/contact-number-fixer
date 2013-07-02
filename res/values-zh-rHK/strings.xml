@@ -23,9 +23,7 @@
         \n响刪除咗國際區號之後，跟著埋嘅號碼如果同前綴唔一致，即俾判定爲區號，就會喺之前添加一個<b>0</b>。
         \n爲咗避免响手機前加上<b>0</b>，必須指定所有可能嘅手機號碼前綴。
         \n下一步將提示輸入手機前綴，响香港嘅情況，基本就喺6同9。因此只要確認輸入框喺唔喺<b>6,9</b>就得喇。</string>
-    <string name="bg">Processing in background</string>
-    <string name="bgDone">Processing done</string>
     <string name="bg">作業中</string>
     <string name="bgDone">作業完成</string>
-
+    
 </resources>
