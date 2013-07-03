@@ -90,35 +90,15 @@ public class ContactNumberFixer extends Activity {
 		return true;
 	}
 
-	private void donate() {
-		afterTaste.donate(null);
-	}
-
-	private void feedback() {
-		afterTaste
-				.feedback(null, new LocalizedPath(homepageUrl,
-						LocalizedPath.GOOGLECODE_WIKI, null, null)
-						.createLocalizedUrl());
-
-	}
-
-	private void share() {
-
-		afterTaste.share(String.format(downloadUrl,
-				PackApp.getAppVersionName(this)));
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.donate:
-			donate();
+		case R.id.afterTaste:
+			afterTaste.showRecommendedChoices();
 			return true;
-		case R.id.feedback:
-			feedback();
-			return true;
-		case R.id.share:
-			share();
+		case R.id.checkUpdate:
+			updater.setNoUpdateNotifier(updater.defaultNoUpdateNotifier);
+			updater.showSetup();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -137,7 +117,17 @@ public class ContactNumberFixer extends Activity {
 
 		updater = new SelfUpdater(this);
 
+		loadSettings();
+
 		updater.setUrl(updateUrl);
+
+		afterTaste.setDefaultDownloadUrl(String.format(downloadUrl,
+				PackApp.getAppVersionName(this)));
+
+		afterTaste
+				.setDefaultHomepage(new LocalizedPath(homepageUrl,
+						LocalizedPath.GOOGLECODE_WIKI, null, null)
+						.createLocalizedUrl());
 
 		logger = (ListView) findViewById(R.id.logger);
 
@@ -155,11 +145,10 @@ public class ContactNumberFixer extends Activity {
 				}
 
 				if (position + 1 == total) {
-					share();
+					updater.setNoUpdateNotifier(updater.defaultNoUpdateNotifier);
+					updater.showSetup();
 				} else if (position + 2 == total) {
-					feedback();
-				} else if (position + 3 == total) {
-					donate();
+					afterTaste.showRecommendedChoices();
 				}
 
 			}
@@ -187,7 +176,8 @@ public class ContactNumberFixer extends Activity {
 			}
 
 		} else {
-			updater.check();
+
+			updater.checkUpdateScheduled();
 
 			startFromConfig();
 		}
@@ -230,6 +220,8 @@ public class ContactNumberFixer extends Activity {
 
 		editor.putString("mobiePrefix", mobilePrefixToStr(mobilePrefixList));
 
+		updater.preferences.write(editor);
+
 		editor.commit();
 
 	}
@@ -257,6 +249,8 @@ public class ContactNumberFixer extends Activity {
 		}
 
 		mobilePrefixList = stringToMobilePrefix(mp);
+
+		updater.preferences.read(prefs);
 
 	}
 
@@ -306,6 +300,7 @@ public class ContactNumberFixer extends Activity {
 	public void onPause() {
 		super.onPause(); // Always call the superclass method first
 
+		saveSettings();
 	}
 
 	@Override

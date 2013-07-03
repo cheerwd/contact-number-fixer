@@ -307,9 +307,8 @@ public class FixContactService extends Service {
 			else
 				pushText(getString(R.string.finished));
 
-			pushText(getString(R.string.afterTasteDonate));
-			pushText(getString(R.string.afterTasteFeedback));
-			pushText(getString(R.string.afterTasteShare));
+			pushText(getString(R.string.afterTaste));
+			pushText(getString(R.string.checkUpdate));
 
 			if (isVisible) {
 				callback.afterTaste.showDonateClickHint();
@@ -463,7 +462,7 @@ public class FixContactService extends Service {
 				finished_shown ? R.drawable.done : R.drawable.bg, text,
 				System.currentTimeMillis());
 
-		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL | Notification.FLAG_ONGOING_EVENT;
 
 		if (finished_shown) {
 			notification.flags |= Notification.FLAG_SHOW_LIGHTS;

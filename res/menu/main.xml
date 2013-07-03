@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     
-<item android:id="@+id/donate" android:title="@string/afterTasteDonate"></item>
-<item android:id="@+id/feedback" android:title="@string/afterTasteFeedback"></item>
-<item android:id="@+id/share" android:title="@string/afterTasteShare"></item>
+<item android:id="@+id/afterTaste" android:title="@string/afterTaste"></item>
+<item android:id="@+id/checkUpdate" android:title="@string/checkUpdate"></item>
 </menu>
